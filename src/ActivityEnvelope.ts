@@ -8,6 +8,9 @@
  * we're monitoring discrete impulses, not sustained signals, and the sustain phase is intended to
  * model the period of time in which a new impulse will not change the activity level, but will
  * reset the envelope to its state at the end of the attack phase.
+ *
+ * Currently the attack will always take the same amount of time, even if retriggered during the
+ * release phase, so the rate of change will be slower following these retriggered attacks.
  */
 
 type EnvelopePhase =
@@ -22,43 +25,56 @@ export default class ActivityEnvelope {
     #attackMs: number;
     #sustainMs: number;
     #releaseMs: number;
-    #lastActivation = -Infinity;
+    #lastPhaseChange = -Infinity;
     #phaseTimeout: number | undefined = undefined;
 
+    #valueAtRetrigger = 0;
     get linearValue() {
-        return 0.9;
+        if (this.phase === 'inactive') return 0;
+        if (this.phase === 'sustain') return 1;
+        const timeSincePhaseChange = Date.now() - this.#lastPhaseChange;
+        if (this.phase === 'attack') {
+            return lerp(this.#valueAtRetrigger, 1, timeSincePhaseChange / this.#attackMs);
+        }
+        if (this.phase === 'release') {
+            return 1 - timeSincePhaseChange / this.#releaseMs;
+        }
+        throw new Error('Unrecognized phase');
     }
 
-    constructor(attackMs = 100, sustainMs = 1000, releaseMs = 1000) {
+    constructor(attackMs = 500, sustainMs = 1000, releaseMs = 2000) {
         this.#attackMs = attackMs;
         this.#sustainMs = sustainMs;
         this.#releaseMs = releaseMs;
     }
 
     activate() {
-        this.#lastActivation = Date.now();
         if (this.phase === 'inactive') {
-            // start the attack phase
+            // If we're inactive, we'll start the attack phase
             this.phase = 'attack';
-            this.#schedulePhaseChange(this.#attackMs);
+        } else if (this.phase === 'attack') {
+            // If we're in the attack phase, we cannot retrigger the attack
+            return;
         } else if (this.phase === 'sustain') {
-            // retrigger: push the sustain phase to the end of the new activation
-            this.#schedulePhaseChange(this.#sustainMs);
+            // If we're in the sustain phase, we'll simply extend the duration (below)
         } else if (this.phase === 'release') {
-            // retrigger: restart the attack phase
-            const currentValue = this.linearValue;
+            // If we're in the release phase, we must capture the current value for continuity
+            this.#valueAtRetrigger = this.linearValue;
             this.phase = 'attack';
-            this.#schedulePhaseChange(this.#attackMs * currentValue);
         }
-        console.log(this.phase);
+
+        // Register phase change, and schedule the next phase change
+        this.#lastPhaseChange = Date.now();
+        this.#schedulePhaseChange(this.#attackMs);
     }
 
     #schedulePhaseChange(after: number) {
         clearTimeout(this.#phaseTimeout);
-        this.#phaseTimeout = window.setTimeout(() => this.#phaseChange(), after);
+        this.#phaseTimeout = window.setTimeout(this.#phaseChange.bind(this), after);
     }
 
     #phaseChange() {
+        this.#valueAtRetrigger = 0;
         if (this.phase === 'attack') {
             this.phase = 'sustain';
             this.#schedulePhaseChange(this.#sustainMs);
@@ -67,7 +83,13 @@ export default class ActivityEnvelope {
             this.#schedulePhaseChange(this.#releaseMs);
         } else if (this.phase === 'release') {
             this.phase = 'inactive';
+        } else {
+            throw new Error('Phase should not change while inactive');
         }
-        console.log(this.phase);
+        this.#lastPhaseChange = Date.now();
     }
+}
+
+function lerp(a: number, b: number, t: number): number {
+    return a + (b - a) * t;
 }
