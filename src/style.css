@@ -5,7 +5,3 @@
 #css-viz {
     @apply bg-green-400;
 }
-
-#regl-viz {
-    @apply bg-red-400;
-}
