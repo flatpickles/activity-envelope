@@ -19,6 +19,8 @@ type EnvelopePhase =
     | 'sustain' // holding steady
     | 'release'; // ramping down
 
+type PhaseSubscription = (phase: EnvelopePhase) => void;
+
 export default class ActivityEnvelope {
     phase: EnvelopePhase = 'inactive';
 
@@ -27,8 +29,9 @@ export default class ActivityEnvelope {
     #releaseMs: number;
     #lastPhaseChange = -Infinity;
     #phaseTimeout: number | undefined = undefined;
-
     #valueAtRetrigger = 0;
+    #subscriptions: PhaseSubscription[] = [];
+
     get linearValue() {
         if (this.phase === 'inactive') return 0;
         if (this.phase === 'sustain') return 1;
@@ -48,6 +51,10 @@ export default class ActivityEnvelope {
         this.#releaseMs = releaseMs;
     }
 
+    destroy() {
+        clearTimeout(this.#phaseTimeout);
+    }
+
     activate() {
         if (this.phase === 'inactive') {
             // If we're inactive, we'll start the attack phase
@@ -63,9 +70,13 @@ export default class ActivityEnvelope {
             this.phase = 'attack';
         }
 
-        // Register phase change, and schedule the next phase change
-        this.#lastPhaseChange = Date.now();
+        // Note phase change, and schedule the next phase change
+        this.#notePhaseChange();
         this.#schedulePhaseChange(this.#attackMs);
+    }
+
+    subscribe(subscription: PhaseSubscription) {
+        this.#subscriptions.push(subscription);
     }
 
     #schedulePhaseChange(after: number) {
@@ -86,7 +97,14 @@ export default class ActivityEnvelope {
         } else {
             throw new Error('Phase should not change while inactive');
         }
+        this.#notePhaseChange();
+    }
+
+    #notePhaseChange() {
         this.#lastPhaseChange = Date.now();
+        for (const subscription of this.#subscriptions) {
+            subscription(this.phase);
+        }
     }
 }
 

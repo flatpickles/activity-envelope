@@ -7,6 +7,9 @@ import vizVert from './shaders/viz.vert';
 const envelope = new ActivityEnvelope();
 document.onkeydown = envelope.activate.bind(envelope);
 document.onclick = envelope.activate.bind(envelope);
+envelope.subscribe((phase) => {
+    console.log(`Envelope phase: ${phase}`);
+});
 
 // Setup REGL
 const canvas = document.getElementById('regl-viz');
