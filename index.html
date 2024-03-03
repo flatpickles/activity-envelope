@@ -11,12 +11,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Activity Envelope</title>
     </head>
-    <body class="w-full h-screen">
-        <div id="app-wrapper" class="flex flex-row w-full h-screen">
+    <body class="w-full h-screen bg-black font-mono">
+        <div id="app-wrapper" class="flex flex-row w-full h-screen gap-2">
             <div id="css-viz" class="w-full"></div>
-            <div id="regl-wrapper" class="w-full">
+            <div id="regl-wrapper" class="w-full bg-white">
                 <canvas id="regl-viz" class="w-full h-full"></canvas>
             </div>
+        </div>
+        <div class="fixed z-10 top-0 w-full h-screen flex items-center justify-center">
+            <div class="p-2 border-black border-8 bg-white">click or type to activate</div>
         </div>
     </body>
 </html>
