@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-#css-viz {
-    background: white;
-    transition: background-color 2s linear;
+:root {
+    --easing-mode: linear;
 }
 
-#css-viz.active {
-    background: #007700;
-    transition: background-color 0.5s linear;
+#css-viz {
+    background: white;
+    transition: background-color 2s var(--easing-mode);
+
+    &.active {
+        background: #007700;
+        transition: background-color 0.5s var(--easing-mode);
+    }
 }

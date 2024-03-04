@@ -3,6 +3,10 @@ import ActivityEnvelope from './ActivityEnvelope';
 import vizFrag from './shaders/viz.frag';
 import vizVert from './shaders/viz.vert';
 
+type EasingMode = 'linear' | 'ease' | 'easeIn' | 'easeOut' | 'easeInOut';
+const easingMode: EasingMode = 'linear';
+document.documentElement.style.setProperty('--easing-mode', easingMode);
+
 // Create an instance of the ActivityEnvelope class, and set up event listeners
 const envelope = new ActivityEnvelope();
 document.onkeydown = envelope.activate.bind(envelope);
