@@ -1,0 +1,11 @@
+{
+    "name": "activity-envelope",
+    "version": "0.1.1",
+    "description": "A simple activity envelope",
+    "main": "dist/index.js",
+    "types": "dist/types/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "prepare": "npm run build"
+    }
+}

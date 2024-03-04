@@ -1,5 +1,5 @@
 import REGL from 'regl';
-import ActivityEnvelope from './ActivityEnvelope';
+import ActivityEnvelope from 'activity-envelope';
 import vizFrag from './shaders/viz.frag';
 import vizVert from './shaders/viz.vert';
 
