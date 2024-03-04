@@ -27,6 +27,7 @@ export default class ActivityEnvelope {
     #attackMs: number;
     #sustainMs: number;
     #releaseMs: number;
+    #constantAttackDuration: boolean;
     #lastPhaseChange = -Infinity;
     #phaseTimeout: number | undefined = undefined;
     #valueAtRetrigger = 0;
@@ -37,7 +38,9 @@ export default class ActivityEnvelope {
         if (this.phase === 'sustain') return 1;
         const timeSincePhaseChange = Date.now() - this.#lastPhaseChange;
         if (this.phase === 'attack') {
-            return lerp(this.#valueAtRetrigger, 1, timeSincePhaseChange / this.#attackMs);
+            if (!this.#constantAttackDuration)
+                return Math.min(1, this.#valueAtRetrigger + timeSincePhaseChange / this.#attackMs);
+            else return lerp(this.#valueAtRetrigger, 1, timeSincePhaseChange / this.#attackMs);
         }
         if (this.phase === 'release') {
             return 1 - timeSincePhaseChange / this.#releaseMs;
@@ -45,10 +48,24 @@ export default class ActivityEnvelope {
         throw new Error('Unrecognized phase');
     }
 
-    constructor(attackMs = 500, sustainMs = 1000, releaseMs = 2000) {
+    /**
+     * @param attackMs - The duration of the attack phase, in milliseconds
+     * @param sustainMs - The duration of the sustain phase, in milliseconds
+     * @param releaseMs - The duration of the release phase, in milliseconds
+     * @param constantAttackDuration - If true, even retriggered attacks will take the same amount
+     *   of time from trigger to peak. If false, attacks will always happen at the same rate, but
+     *   for abbreviated periods if retriggered during the release phase.
+     */
+    constructor(
+        attackMs = 500,
+        sustainMs = 1000,
+        releaseMs = 2000,
+        constantAttackDuration = false
+    ) {
         this.#attackMs = attackMs;
         this.#sustainMs = sustainMs;
         this.#releaseMs = releaseMs;
+        this.#constantAttackDuration = constantAttackDuration;
     }
 
     destroy() {
