@@ -1,14 +1,6 @@
 # activity-envelope
 
-This is a work in progress!
-
-repo todo:
-
--   Top-level package.json file that can run the demo
--   Fix vercel deploys (demo/vite project only)
--   Make it so changes in the activity-envelope package hot-reload in dev setup
-
-activity-envelope todo
+This is a work in progress! To do:
 
 -   Easing function support
 -   API cleanup & documentation
