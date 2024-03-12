@@ -1,0 +1,7 @@
+{
+    "name": "activity-envelope-root",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ]
+}

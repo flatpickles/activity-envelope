@@ -15,7 +15,7 @@
 
 import { lerp } from './util';
 
-type EnvelopePhase =
+export type EnvelopePhase =
     | 'inactive' // no activity
     | 'attack' // ramping up
     | 'sustain' // holding steady
@@ -24,8 +24,6 @@ type EnvelopePhase =
 type PhaseSubscription = (phase: EnvelopePhase) => void;
 
 export default class ActivityEnvelope {
-    phase: EnvelopePhase = 'inactive';
-
     #attackMs: number;
     #sustainMs: number;
     #releaseMs: number;
@@ -35,6 +33,14 @@ export default class ActivityEnvelope {
     #valueAtRetrigger = 0;
     #subscriptions: PhaseSubscription[] = [];
 
+    /**
+     * The current phase of the envelope.
+     */
+    phase: EnvelopePhase = 'inactive';
+
+    /**
+     * The current linear value of the envelope, from 0 to 1.
+     */
     get linearValue() {
         if (this.phase === 'inactive') return 0;
         if (this.phase === 'sustain') return 1;
@@ -51,12 +57,10 @@ export default class ActivityEnvelope {
     }
 
     /**
-     * @param attackMs - The duration of the attack phase, in milliseconds
-     * @param sustainMs - The duration of the sustain phase, in milliseconds
-     * @param releaseMs - The duration of the release phase, in milliseconds
-     * @param constantAttackDuration - If true, even retriggered attacks will take the same amount
-     *   of time from trigger to peak. If false, attacks will always happen at the same rate, but
-     *   for abbreviated periods if retriggered during the release phase.
+     * @param attackMs The duration of the attack phase, in milliseconds
+     * @param sustainMs The duration of the sustain phase, in milliseconds
+     * @param releaseMs The duration of the release phase, in milliseconds
+     * @param constantAttackDuration If true, even retriggered attacks will take the same amount of time from trigger to peak. If false, attacks will always happen at the same rate, but for abbreviated periods if retriggered during the release phase.
      */
     constructor(
         attackMs = 500,
@@ -70,10 +74,16 @@ export default class ActivityEnvelope {
         this.#constantAttackDuration = constantAttackDuration;
     }
 
+    /**
+     * Clean up any resources associated with this ActivityEnvelope instance.
+     */
     destroy() {
         clearTimeout(this.#phaseTimeout);
     }
 
+    /**
+     * Trigger an attack phase, or extend the sustain phase if already active.
+     */
     activate() {
         if (this.phase === 'inactive') {
             // If we're inactive, we'll start the attack phase
@@ -94,6 +104,10 @@ export default class ActivityEnvelope {
         this.#schedulePhaseChange(this.#attackMs);
     }
 
+    /**
+     * Subscribe to phase change events.
+     * @param subscription A function to call when the phase changes.
+     */
     subscribe(subscription: PhaseSubscription) {
         this.#subscriptions.push(subscription);
     }
