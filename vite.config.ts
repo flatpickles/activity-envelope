@@ -5,13 +5,5 @@ export default defineConfig({
     plugins: [glsl()],
     build: {
         outDir: 'dist',
-        rollupOptions: {
-            input: {
-                app: './demo/index.html',
-            },
-        },
-    },
-    server: {
-        open: '/demo/index.html',
     },
 });

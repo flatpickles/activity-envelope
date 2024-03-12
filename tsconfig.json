@@ -22,5 +22,5 @@
       "vite-plugin-glsl/ext"
     ]
   },
-  "include": ["demo", "activity-envelope"]
+  "include": ["src", "activity-envelope"]
 }
