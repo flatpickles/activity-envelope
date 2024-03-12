@@ -1,7 +1,7 @@
 {
     "name": "activity-envelope",
-    "version": "1.0.1",
-    "description": "Activity Envelope is a tool for modeling and tracking user activity.",
+    "version": "1.0.2",
+    "description": "Activity monitoring tool, inspired by an ADSR envelope.",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "scripts": {
@@ -12,6 +12,7 @@
         "type": "git",
         "url": "git+https://github.com/flatpickles/activity-envelope.git"
     },
+    "homepage": "https://github.com/flatpickles/activity-envelope/blob/main/activity-envelope/README.md",
     "keywords": [
         "activity",
         "envelope",
