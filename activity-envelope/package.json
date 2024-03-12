@@ -1,7 +1,7 @@
 {
     "name": "activity-envelope",
-    "version": "1.0.2",
-    "description": "Activity monitoring tool, inspired by an ADSR envelope.",
+    "version": "1.0.3",
+    "description": "Activity monitoring tool, inspired by envelope generators used in synthesizers",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "scripts": {
