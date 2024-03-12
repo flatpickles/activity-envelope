@@ -1,11 +1,26 @@
 {
     "name": "activity-envelope",
-    "version": "0.1.1",
-    "description": "A simple activity envelope",
+    "version": "1.0.0",
+    "description": "activity-envelope is a simple activity monitor",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "scripts": {
         "build": "tsc",
         "prepare": "npm run build"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/flatpickles/activity-envelope.git"
+    },
+    "keywords": [
+        "activity",
+        "envelope",
+        "tracker",
+        "typescript"
+    ],
+    "author": "Matt Nichols",
+    "license": "MIT",
+    "files": [
+        "dist/**/*"
+    ]
 }
