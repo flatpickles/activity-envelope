@@ -1,7 +1,7 @@
 {
     "name": "activity-envelope",
-    "version": "1.0.0",
-    "description": "activity-envelope is a simple activity monitor",
+    "version": "1.0.1",
+    "description": "Activity Envelope is a tool for modeling and tracking user activity.",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "scripts": {
@@ -10,7 +10,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/flatpickles/activity-envelope.git"
+        "url": "git+https://github.com/flatpickles/activity-envelope.git"
     },
     "keywords": [
         "activity",

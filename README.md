@@ -1,8 +1,9 @@
-# activity-envelope
+# activity-envelope & Demo App
 
-This is a work in progress! To do:
+This repo contains the source for the `activity-envelope` [package](https://www.npmjs.com/package/activity-envelope), and a simple demo project app.
 
--   Easing function support
--   API cleanup & documentation
+You can read more about `activity-envelope` in the [package readme](/activity-envelope), or install it for use in your own project:
 
-Easing: https://chat.openai.com/share/a39d618f-7eb6-4409-92a5-cdad3ad7a82e
+```
+npm i activity-envelope
+```
