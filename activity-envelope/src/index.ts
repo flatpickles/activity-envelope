@@ -1,5 +1,3 @@
-import { lerp } from './util';
-
 export type EnvelopePhase =
     | 'inactive' // no activity
     | 'attack' // ramping up
@@ -124,4 +122,15 @@ export default class ActivityEnvelope {
             subscription(this.phase);
         }
     }
+}
+
+/**
+ * Linearly interpolate between two values.
+ * @param a the start value
+ * @param b the end value
+ * @param t the interpolation factor, from 0 to 1
+ * @returns the interpolated value
+ */
+function lerp(a: number, b: number, t: number) {
+    return a + (b - a) * t;
 }

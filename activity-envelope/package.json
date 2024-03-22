@@ -1,6 +1,6 @@
 {
     "name": "activity-envelope",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "Activity monitoring tool, inspired by envelope generators used in synthesizers",
     "type": "module",
     "main": "dist/index.js",
